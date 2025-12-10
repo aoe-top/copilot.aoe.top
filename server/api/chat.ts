@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
         await readBody(event);
 
     const result = streamText({
-        model,
+        model: model || "xai/grok-4",
         messages: convertToModelMessages(messages),
     });
 

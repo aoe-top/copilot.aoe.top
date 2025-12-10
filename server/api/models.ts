@@ -1,5 +1,7 @@
+import { modelsList } from "../utils/ModelList";
+
 //http://localhost:3000/api/models
 export default defineEventHandler(async (event) => {
-    const res = await fetch("https://ai-gateway.vercel.sh/v1/models");
-    return res.json();
+    const list = modelsList;
+    return { object: "list", data: list };
 });

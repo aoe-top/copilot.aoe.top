@@ -3,8 +3,7 @@ export default defineNuxtConfig({
     compatibilityDate: "2025-07-15",
     devtools: { enabled: true },
 
-    routeRules: {
-        // Add cors headers on API routes
-        "/api/**": { cors: true },
+    imports: {
+        dirs: ["~~/shared", "~~/server/utils"],
     },
 });
