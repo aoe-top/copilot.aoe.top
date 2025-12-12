@@ -25,8 +25,8 @@ export default defineEventHandler(async (event) => {
         for (const [name, toolDef] of Object.entries(clientTools)) {
             tools[name] = tool({
                 description: toolDef.description,
-                parameters: jsonSchema(toolDef.parameters),
-            } as any);
+                inputSchema: jsonSchema(toolDef.inputSchema.jsonSchema),
+            });
         }
     }
 
