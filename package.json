@@ -10,14 +10,14 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@ai-sdk/xai": "^3.0.0-beta.53",
+    "@ai-sdk/xai": "^3.0.1",
     "@exalabs/ai-sdk": "^1.0.5",
     "@modelcontextprotocol/sdk": "^1.24.3",
     "@nuxtjs/seo": "3.3.0",
     "@tanstack/vue-table": "^8.21.3",
     "@upstash/redis": "^1.35.8",
     "@vueuse/core": "^14.1.0",
-    "ai": "^6.0.0-beta.139",
+    "ai": "^6.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.562.0",
