@@ -41,5 +41,7 @@ export default defineNuxtConfig({
     site: {
         url: "https://www.glosc.ai",
         name: "Glosc Copilot",
+        description:
+            'Glosc Copilot 是跨平台 AI 智能桌面助手用自然语言把"打开应用 / 管理文件 / 执行命令 / 自动化流程"变成一次对话， 通过情感化交互与 Live2D 虚拟形象，带来更有温度的陪伴式体验',
     },
 });
