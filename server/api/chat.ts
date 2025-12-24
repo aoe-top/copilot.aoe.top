@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
     const result = streamText({
         model: model || "xai/grok-code-fast-1",
-        messages: convertToModelMessages(messages),
+        messages: await convertToModelMessages(messages),
         tools,
         stopWhen: stepCountIs(10),
     });
