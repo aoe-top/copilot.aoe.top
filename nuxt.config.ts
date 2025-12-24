@@ -42,17 +42,4 @@ export default defineNuxtConfig({
         url: "https://www.glosc.ai",
         name: "Glosc Copilot",
     },
-    nitro: {
-        storage: {
-            redis: {
-                driver: "redis",
-                port: process.env.REDIS_PORT
-                    ? parseInt(process.env.REDIS_PORT)
-                    : 6379, // Redis port
-                host: process.env.REDIS_HOST || "127.0.0.1", // Redis host
-                username: process.env.REDIS_USERNAME || "", // needs Redis >= 6
-                password: process.env.REDIS_PASSWORD || "",
-            },
-        },
-    },
 });

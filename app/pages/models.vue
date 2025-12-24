@@ -51,16 +51,87 @@
                     </div>
 
                     <div class="space-y-1">
-                        <div class="text-xs text-muted-foreground">标签</div>
-                        <select
-                            v-model="tagFilter"
-                            class="h-9 w-full rounded-md border bg-background px-3 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                        >
-                            <option value="all">全部</option>
-                            <option v-for="t in tagOptions" :key="t" :value="t">
-                                {{ t }}
-                            </option>
-                        </select>
+                        <div class="text-xs text-muted-foreground">
+                            标签（多选）
+                        </div>
+                        <div class="relative">
+                            <Button
+                                ref="tagTriggerRef"
+                                type="button"
+                                variant="outline"
+                                class="w-full justify-between"
+                                :disabled="tagOptions.length === 0"
+                                @click="toggleTagDropdown"
+                            >
+                                <span class="truncate text-left">
+                                    <span v-if="selectedTags.length">{{
+                                        selectedTagsLabel
+                                    }}</span>
+                                    <span v-else class="text-muted-foreground"
+                                        >全部</span
+                                    >
+                                </span>
+                                <span class="ml-2 text-muted-foreground"
+                                    >▾</span
+                                >
+                            </Button>
+
+                            <div
+                                v-if="tagDropdownOpen"
+                                ref="tagDropdownRef"
+                                class="absolute left-0 top-[calc(100%+0.5rem)] z-50 w-full rounded-md border bg-popover text-popover-foreground shadow-md"
+                            >
+                                <div
+                                    class="flex items-center gap-2 border-b p-2"
+                                >
+                                    <input
+                                        v-model.trim="tagQuery"
+                                        class="h-8 w-full rounded-md border bg-background px-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                        placeholder="搜索标签"
+                                        type="search"
+                                    />
+                                    <Button
+                                        type="button"
+                                        size="sm"
+                                        variant="secondary"
+                                        :disabled="!selectedTags.length"
+                                        @click="clearTags"
+                                    >
+                                        清空
+                                    </Button>
+                                </div>
+
+                                <div class="max-h-56 overflow-auto p-2">
+                                    <div
+                                        v-if="filteredTagOptions.length === 0"
+                                        class="py-2 text-sm text-muted-foreground"
+                                    >
+                                        无匹配标签
+                                    </div>
+                                    <label
+                                        v-for="t in filteredTagOptions"
+                                        :key="t"
+                                        class="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
+                                    >
+                                        <input
+                                            class="h-4 w-4"
+                                            type="checkbox"
+                                            :checked="selectedTags.includes(t)"
+                                            @change="toggleTag(t)"
+                                        />
+                                        <span class="truncate text-sm">{{
+                                            t
+                                        }}</span>
+                                    </label>
+                                </div>
+
+                                <div
+                                    class="border-t p-2 text-xs text-muted-foreground"
+                                >
+                                    已选：{{ selectedTags.length }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="space-y-1">
@@ -402,6 +473,7 @@
 
 <script setup lang="ts">
 import type { ModelInfo } from "~~/shared/interface";
+import { onClickOutside } from "@vueuse/core";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import {
     Accordion,
@@ -454,7 +526,7 @@ const allCount = computed(() => allModels.value.length);
 
 const searchQuery = ref("");
 const typeFilter = ref<string>("all");
-const tagFilter = ref<string>("all");
+const selectedTags = ref<string[]>([]);
 const maxTokensMin = ref<number | null>(null);
 const maxTokensMax = ref<number | null>(null);
 
@@ -481,6 +553,53 @@ const tagOptions = computed(() => {
     }
     return Array.from(set).sort((a, b) => a.localeCompare(b));
 });
+
+const tagDropdownOpen = ref(false);
+const tagQuery = ref("");
+const tagTriggerRef = ref<HTMLElement | null>(null);
+const tagDropdownRef = ref<HTMLElement | null>(null);
+
+onClickOutside(
+    tagDropdownRef,
+    () => {
+        tagDropdownOpen.value = false;
+    },
+    { ignore: [tagTriggerRef] }
+);
+
+const filteredTagOptions = computed(() => {
+    const q = tagQuery.value.trim().toLowerCase();
+    if (!q) return tagOptions.value;
+    return tagOptions.value.filter((t) => t.toLowerCase().includes(q));
+});
+
+const selectedTagsLabel = computed(() => {
+    const list = selectedTags.value;
+    if (!list.length) return "全部";
+    const head = list.slice(0, 2).join(", ");
+    const rest = list.length - 2;
+    return rest > 0 ? `${head} +${rest}` : head;
+});
+
+function toggleTagDropdown() {
+    if (tagOptions.value.length === 0) return;
+    tagDropdownOpen.value = !tagDropdownOpen.value;
+    if (tagDropdownOpen.value) tagQuery.value = "";
+}
+
+function toggleTag(tag: string) {
+    const list = selectedTags.value;
+    const idx = list.indexOf(tag);
+    if (idx >= 0) {
+        selectedTags.value = [...list.slice(0, idx), ...list.slice(idx + 1)];
+    } else {
+        selectedTags.value = [...list, tag];
+    }
+}
+
+function clearTags() {
+    selectedTags.value = [];
+}
 
 function toggleSortDir() {
     sortDir.value = sortDir.value === "asc" ? "desc" : "asc";
@@ -564,9 +683,9 @@ const filteredModels = computed(() => {
         if (typeFilter.value !== "all" && m.type !== typeFilter.value)
             return false;
 
-        if (tagFilter.value !== "all") {
+        if (selectedTags.value.length) {
             const tags = m.tags ?? [];
-            if (!tags.includes(tagFilter.value)) return false;
+            if (!selectedTags.value.some((t) => tags.includes(t))) return false;
         }
 
         if (q && !toSearchText(m).includes(q)) return false;
