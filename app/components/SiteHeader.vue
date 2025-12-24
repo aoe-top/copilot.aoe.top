@@ -1,7 +1,10 @@
 <script setup lang="ts">
 type NavLink = { href: string; label: string };
 
-const navLinks: NavLink[] = [{ href: "/business-plan", label: "商业计划" }];
+const navLinks: NavLink[] = [
+    { href: "/business-plan", label: "商业计划" },
+    { href: "/models", label: "模型列表" },
+];
 </script>
 
 <template>

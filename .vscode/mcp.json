@@ -3,6 +3,10 @@
         "nuxt-seo": {
             "type": "http",
             "url": "https://nuxtseo.com/mcp"
+        },
+        "shadcnVue": {
+            "command": "npx",
+            "args": ["shadcn-vue@latest", "mcp"]
         }
     }
 }
