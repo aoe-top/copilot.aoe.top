@@ -19,4 +19,15 @@ export interface ModelInfo {
     };
 }
 
+export interface AuthUserPublic {
+    id: string;
+    email?: string;
+    name?: string;
+    githubLogin?: string;
+    githubId?: number;
+    avatarUrl?: string;
+    microsoftOid?: string;
+    appleSub?: string;
+}
+
 export {};

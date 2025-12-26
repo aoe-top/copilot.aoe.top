@@ -1,12 +1,11 @@
 import {
     convertToModelMessages,
     streamText,
-    ToolSet,
-    UIMessage,
     tool,
     stepCountIs,
     jsonSchema,
 } from "ai";
+import type { ToolSet, UIMessage } from "ai";
 
 // http://localhost:3000/api/chat
 export default defineEventHandler(async (event) => {

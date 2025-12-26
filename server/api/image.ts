@@ -1,13 +1,12 @@
 import {
     convertToModelMessages,
     streamText,
-    ToolSet,
-    UIMessage,
     generateImage,
     tool,
     stepCountIs,
     jsonSchema,
 } from "ai";
+import type { ToolSet, UIMessage } from "ai";
 
 // http://localhost:3000/api/image
 export default defineEventHandler(async (event) => {

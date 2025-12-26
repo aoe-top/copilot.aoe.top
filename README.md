@@ -43,6 +43,39 @@ Glosc Copilot 是一款跨平台的 AI 智能助手，灵感来源于钢铁侠�
 - **插件系统**：可扩展的功能模块
 - **多语言支持**：中文、英文等多语言界面
 
+## 本站点（www.glosc.ai）开发
+
+### 启动
+
+- 安装依赖：`yarn`
+- 本地开发：`yarn dev`
+
+### 环境变量
+
+认证与 GitHub 登录相关：参考 `.env.example`
+
+- `MONGODB_URI`：MongoDB 连接串
+- `MONGODB_DB`：数据库名（默认 `Glosc`，用户数据存储在 `Glosc.user`）
+- `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET`：GitHub OAuth App
+- `MICROSOFT_CLIENT_ID` / `MICROSOFT_CLIENT_SECRET`：微软登录（Azure App Registration）
+- `MICROSOFT_TENANT_ID`：可选，默认 `common`
+- 可选：`AUTH_SESSION_COOKIE_NAME`（默认 `glosc_session`）
+- 可选：`AUTH_SESSION_TTL_DAYS`（默认 30 天）
+
+### GitHub OAuth 回调地址
+
+在 GitHub OAuth App 里配置 Authorization callback URL：
+
+- 本地：`http://localhost:3000/api/user/github/callback`
+- 线上：`https://www.glosc.ai/api/user/github/callback`
+
+### Microsoft OAuth 回调地址
+
+- Microsoft Redirect URI：
+	- 本地：`http://localhost:3000/api/user/microsoft/callback`
+	- 线上：`https://www.glosc.ai/api/user/microsoft/callback`
+
+
 
 
 

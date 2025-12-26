@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 
+const { user, refresh, logout } = useAuth();
+
+const displayName = computed(() => {
+    return (
+        user.value?.name ||
+        user.value?.githubLogin ||
+        user.value?.email ||
+        "已登录"
+    );
+});
+
+async function onLogout() {
+    await logout();
+    await navigateTo("/login");
+}
+
 type NavLink = { href: string; label: string };
 
 const navLinks: NavLink[] = [
@@ -18,6 +34,10 @@ watch(
         mobileMenuOpen.value = false;
     }
 );
+
+onMounted(() => {
+    refresh().catch(() => {});
+});
 </script>
 
 <template>
@@ -46,13 +66,31 @@ watch(
                     <ThemeToggle />
 
                     <!-- Desktop actions -->
-                    <Button
-                        as-child
-                        variant="secondary"
-                        class="hidden sm:inline-flex"
-                    >
-                        <NuxtLink to="/business-plan">阅读商业计划</NuxtLink>
-                    </Button>
+                    <template v-if="user">
+                        <Button
+                            as-child
+                            variant="outline"
+                            class="hidden sm:inline-flex"
+                        >
+                            <NuxtLink to="/account">{{ displayName }}</NuxtLink>
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            class="hidden sm:inline-flex"
+                            @click="onLogout"
+                        >
+                            退出
+                        </Button>
+                    </template>
+                    <template v-else>
+                        <Button
+                            as-child
+                            variant="outline"
+                            class="hidden sm:inline-flex"
+                        >
+                            <NuxtLink to="/login">登录</NuxtLink>
+                        </Button>
+                    </template>
                     <Button as-child class="hidden sm:inline-flex">
                         <a
                             href="https://github.com/glosc-ai/Glosc-Copilot"
@@ -94,6 +132,35 @@ watch(
                     </NuxtLink>
                 </nav>
                 <div class="flex flex-col gap-2 pb-3">
+                    <template v-if="user">
+                        <Button as-child variant="outline">
+                            <NuxtLink
+                                to="/account"
+                                @click="mobileMenuOpen = false"
+                                >{{ displayName }}</NuxtLink
+                            >
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            @click="
+                                () => {
+                                    mobileMenuOpen = false;
+                                    onLogout();
+                                }
+                            "
+                        >
+                            退出
+                        </Button>
+                    </template>
+                    <template v-else>
+                        <Button as-child variant="outline">
+                            <NuxtLink
+                                to="/login"
+                                @click="mobileMenuOpen = false"
+                                >登录</NuxtLink
+                            >
+                        </Button>
+                    </template>
                     <Button as-child variant="secondary">
                         <NuxtLink
                             to="/business-plan"
