@@ -136,7 +136,7 @@
 
                     <div class="space-y-1">
                         <div class="text-xs text-muted-foreground">
-                            最大令牌范围
+                            最大Tokens范围
                         </div>
                         <div class="flex items-center gap-2">
                             <input
@@ -172,7 +172,7 @@
                                 <option value="context_window">
                                     上下文窗口
                                 </option>
-                                <option value="max_tokens">最大令牌</option>
+                                <option value="max_tokens">最大Tokens</option>
                                 <option value="pricing_input">输入价格</option>
                                 <option value="pricing_output">输出价格</option>
                             </select>
@@ -253,7 +253,7 @@
                                                 >
                                                 <TableHead>类型</TableHead>
                                                 <TableHead class="w-40"
-                                                    >窗口 / 令牌</TableHead
+                                                    >最大Tokens</TableHead
                                                 >
                                                 <TableHead class="w-50"
                                                     >价格</TableHead
@@ -321,21 +321,23 @@
                                                         <div>
                                                             <span
                                                                 class="text-muted-foreground"
-                                                                >窗口：</span
+                                                                >输出：</span
                                                             >
                                                             {{
-                                                                model.context_window ??
-                                                                "-"
+                                                                model.context_window
+                                                                    ? model.context_window.toLocaleString()
+                                                                    : "-"
                                                             }}
                                                         </div>
                                                         <div>
                                                             <span
                                                                 class="text-muted-foreground"
-                                                                >令牌：</span
+                                                                >输入：</span
                                                             >
                                                             {{
-                                                                model.max_tokens ??
-                                                                "-"
+                                                                model.max_tokens
+                                                                    ? model.max_tokens.toLocaleString()
+                                                                    : "-"
                                                             }}
                                                         </div>
                                                     </div>
